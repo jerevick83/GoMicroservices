@@ -13,7 +13,7 @@ func NewAbout(l *log.Logger) *About {
 	return &About{l}
 }
 
-func (a *About) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (a *About) About(w http.ResponseWriter, r *http.Request) {
 	a.l.Println("This is the about page")
 	_, err := w.Write([]byte("This is the about page"))
 	if err != nil {
