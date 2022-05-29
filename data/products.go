@@ -24,6 +24,19 @@ func (p *Products) ToJSON(w io.Writer) error {
 	return e.Encode(p)
 }
 
+func (p *Product) FromJSON(w io.Reader) error {
+	e := json.NewDecoder(w)
+	return e.Decode(p)
+}
+func AddProduct(p *Product) {
+	p.ID = getNextID()
+	productList = append(productList, p)
+}
+
+func getNextID() int {
+	lp := productList[len(productList)-1]
+	return lp.ID + 1
+}
 func GetProducts() Products {
 	return productList
 }
@@ -38,7 +51,7 @@ var productList = []*Product{
 		UpdatedOn:   time.Now().UTC().String(),
 	},
 	&Product{
-		ID:          1,
+		ID:          2,
 		Name:        "IPhone 14",
 		Description: "High-resolution camera",
 		Price:       50.00,
