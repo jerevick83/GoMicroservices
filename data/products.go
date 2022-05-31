@@ -2,18 +2,16 @@ package data
 
 import (
 	"encoding/json"
-	"fmt"
-	"github.com/go-playground/validator/v10"
 	"io"
 	"time"
 )
 
 type Product struct {
 	ID          int     `json:"id"`
-	Name        string  `json:"name" validate:"required,gte=10"`
+	Name        string  `json:"name"`
 	Description string  `json:"description"`
 	SKU         string  `json:"-"`
-	Price       float64 `json:"price" validate:"gt=0"`
+	Price       float64 `json:"price"`
 	CreatedOn   string  `json:"_"`
 	DeleteOn    string  `json:"_"`
 	UpdatedOn   string  `json:"_"`
@@ -33,27 +31,6 @@ func (p *Product) FromJSON(w io.Reader) error {
 func AddProduct(p *Product) {
 	p.ID = getNextID()
 	productList = append(productList, p)
-}
-
-func UpdateProduct(id int, p *Product) error {
-	_, pos, err := findProduct(id)
-	if err != nil {
-		return err
-	}
-	p.ID = id
-	productList[pos] = p
-	return nil
-}
-
-var ErrProductNotFound = fmt.Errorf("product not found")
-
-func findProduct(id int) (*Product, int, error) {
-	for i, p := range productList {
-		if p.ID == id {
-			return p, i, nil
-		}
-	}
-	return nil, -1, ErrProductNotFound
 }
 
 func getNextID() int {
@@ -81,9 +58,4 @@ var productList = []*Product{
 		CreatedOn:   time.Now().UTC().String(),
 		UpdatedOn:   time.Now().UTC().String(),
 	},
-}
-
-func (p *Product) Validate() error {
-	validate := validator.New()
-	return validate.Struct(p)
 }
